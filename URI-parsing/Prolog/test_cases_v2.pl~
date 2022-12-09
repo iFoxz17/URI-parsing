@@ -1,0 +1,127 @@
+:- begin_tests(uri).
+
+test(scheme) :-
+  uri_parse("s:", uri(s, [], [], 80, [], [], [])),      %%% ALPHA
+  uri_parse("ss:", uri(ss, [], [], 80, [], [], [])),    %%% ALPHA ALPHA
+  uri_parse("s1:", uri('s1', [], [], 80, [], [], [])),  %%% ALPHA DIGIT
+  uri_parse("s+:", uri('s+', [], [], 80, [], [], [])),  %%% ALPHA "+"
+  uri_parse("s-:", uri('s-', [], [], 80, [], [], [])),  %%% ALPHA "-"
+  uri_parse("s.:", uri('s.', [], [], 80, [], [], [])),  %%% ALPHA "."
+  \+uri_parse("s/:", _),                                %%% Carattere non valido
+  \+uri_parse("s?:", _),                                %%% Carattere non valido
+  \+uri_parse("s#:", _),                                %%% Carattere non valido
+  \+uri_parse("s@:", _),                                %%% Carattere non valido
+  \+uri_parse("s::", _),                                %%% Carattere non valido
+  \+uri_parse(":", _).                                  %%% SCHEME Vuoto
+
+test(host) :-
+  uri_parse("s://host", uri(s, [], host, 80, [], [], [])),
+  \+uri_parse("s://host.", _),
+  uri_parse("s://host.com", uri(_, [], 'host.com', 80, [], [], [])),
+  uri_parse("s://host.com:123", uri(_, [], 'host.com', 123, [], [], [])),
+  \+uri_parse("s://host..com", _),
+  \+uri_parse("s://ho?st", _),
+  \+uri_parse("s://ho#st", _),
+  \+uri_parse("s://ho:st", _),
+  \+uri_parse("s://", _), %%% Empty host
+  uri_parse("s://userinfo@host.com:110", uri(s, userinfo, 'host.com', 110, [], [], [])).
+
+test(ipaddress) :-
+  uri_parse("s://192.168.224.123", uri(_, [], '192.168.224.123', 80, [], [], [])),  %%% Inutile con host.
+  uri_parse("s://255.255.255.255", uri(_, [], '255.255.255.255', 80, [], [], [])).
+
+test(userinfo) :-
+  uri_parse("s://ui@host", uri(s, ui, host, 80, [], [], [])),
+  uri_parse("s://u%20i@host", uri(s, 'u%20i', host, 80, [], [], [])),
+  uri_parse("s://u-@host", uri(s, 'u-', host, 80, [], [], [])),
+  uri_parse("s://u_@host", uri(s, 'u_', host, 80, [], [], [])),
+  uri_parse("s://userinfo.@host", uri(_, 'userinfo.', _, _, _, [], [])),
+  \+uri_parse("s://@host", _),          %%% Empty userinfo
+  \+uri_parse("s://userinfo@", _),      %%% Empty host
+  \+uri_parse("s://u/i@host", uri(s, _, host, _, _, _, _)),
+  \+uri_parse("s://u?i@host", _),
+  \+uri_parse("s://u#i@host", _),
+  \+uri_parse("s://u@i@host", _),
+  \+uri_parse("s://u:i@host", _).
+
+test(port) :-
+  uri_parse("s://host:110", uri(s, [], host, 110, [], [], [])),
+  \+uri_parse("s://:110", _),
+  \+uri_parse("s://host:a", _),      %%% Port isnt a number
+  \+uri_parse("s://host:", _).
+
+test(authPath) :-
+  uri_parse("s://host.com/path1/path2", uri(s, [], 'host.com', 80, 'path1/path2', [], [])),
+  uri_parse("s://host.com/", uri(s, [], 'host.com', 80, [], [], [])),
+  \+uri_parse("s://host.com.", _),
+  \+uri_parse("s://host.com//", _),
+  \+uri_parse("s://host.com/p/", _), %%% Path deve avere qualcosa dopo "/"
+  uri_parse("s://host.com/p/p", uri(s, [], 'host.com', 80, 'p/p', [], [])),
+  uri_parse("s://host.com/path./path1/path2?query?#fragm", uri(s, [], 'host.com', 80, 'path./path1/path2', 'query?', 'fragm')).
+
+test(path) :-
+  uri_parse("c:/path./path1/path2", uri(c, [], [], 80, 'path./path1/path2', [], [])),
+  \+uri_parse("c:path./path1/path2", uri(c, [], [], 80, 'path./path1/path2', [], [])),
+  uri_parse("c:/path.", uri(c, [], [], 80, 'path.', [], [])),
+  \+uri_parse("c:/host.com//", _),
+  \+uri_parse("c:/host.com/p/", _), %%% Path deve avere qualcosa dopo "/"
+  uri_parse("c:/p/p", uri(c, [], [], 80, 'p/p', [], [])),
+  uri_parse("s:/", uri(s, [], [], 80, [], [], [])),
+  uri_parse("c:/path./path1/path2?query?#fragm", uri(c, [], [], 80, 'path./path1/path2', 'query?', 'fragm')),
+  uri_parse("c:/?query?#fragm", uri(c, [], [], 80, [], 'query?', 'fragm')),
+  uri_parse("c:/?query?", uri(c, [], [], 80, [], 'query?', [])),
+  uri_parse("c:/#fragm", uri(c, [], [], 80, [], [], 'fragm')),
+  uri_parse("c:/path./path1/path2#fragm", uri(c, [], [], 80, 'path./path1/path2', [], 'fragm')),
+  \+uri_parse("c:?query?#fragm", _).
+
+test(mailto) :-
+    uri_parse("mailto:userinfo", uri(mailto, userinfo, [] , 80, [], [], [])),
+    uri_parse("mailto:userinfo@host.com", uri(mailto, userinfo, 'host.com', 80, [], [], [])),
+    uri_parse("mailto:", uri(mailto, [], [], 80, [], [], [])),
+    \+uri_parse("mailto:userinfo@", uri(mailto, userinfo, _, [], 80, [], [])).
+
+test(news) :-
+    uri_parse("news:host", uri(news, [], host , 80, [], [], [])),
+    uri_parse("news:host.com", uri(news, [], 'host.com', 80, [], [], [])),
+    uri_parse("news:", uri(news, [], [], 80, [], [], [])),
+    \+uri_parse("news:ui@host", uri(news, _, _ , 80, [], [], [])).
+
+test(telfax) :-
+  uri_parse("tel:userinfo", uri(tel, userinfo, [], 80, [], [], [])),
+  uri_parse("fax:userinfo", uri(fax, userinfo, [], 80, [], [], [])),
+  uri_parse("tel:", uri(tel, [], [], 80, [], [], [])),
+  uri_parse("fax:", uri(fax, [], [], 80, [], [], [])).
+
+test(zosAuth) :-
+  uri_parse("zos://me@hercules.disco.unimib.it:3270/myproj.linalg.fortran(svd)?submit=FORTXC", uri(zos, me, 'hercules.disco.unimib.it', 3270, 'myproj.linalg.fortran(svd)', 'submit=FORTXC', [])),
+  uri_parse("zos://me@hercules.disco.unimib.it:3270/myproj.linalg.fortran?submit=FORTXC", uri(zos, me, 'hercules.disco.unimib.it', 3270, 'myproj.linalg.fortran', 'submit=FORTXC', [])),
+  \+uri_parse("zos://me@hercules.disco.unimib.it:3270/myproj.linalg.fortran()?submit=FORTXC", _),
+  \+uri_parse("zos://me@hercules.disco.unimib.it:3270/myproj.linalg.fortran(?submit=FORTXC", _),
+  \+uri_parse("zos://me@hercules.disco.unimib.it:3270/myproj.linalg.fortran)?submit=FORTXC", _),
+  \+uri_parse("zos://me@hercules.disco.unimib.it:3270/", _), %%% PATH deve contenere almeno 1 carattere
+  \+uri_parse("zos://me@hercules.disco.unimib.it:3270/myproj.linalg.fortran(a23456789))", _), %%% TOO MANY id8 chars (9)
+  \+uri_parse("zos://me@hercules.disco.unimib.it:3270/a234567890a234567890a234567890a23456789012345", _), %%% TOO MANY id44 chars (45)
+  \+uri_parse("zos://me@hercules.disco.unimib.it:3270/1", _), %%% id44 non inizia per ALPHA
+  \+uri_parse("zos://me@hercules.disco.unimib.it:3270/a(1)", _), %%% id8 non inizia per ALPHA
+  \+uri_parse("zos://me@hercules.disco.unimib.it:3270/a.", _), %%% id44 non può terminare con un punto
+  \+uri_parse("zos://me@hercules.disco.unimib.it:3270", _).
+
+test(sZos) :-
+  uri_parse("zos:/myproj.linalg.fortran(svd)?submit=FORTXC", uri(zos, [], [], 80, 'myproj.linalg.fortran(svd)', 'submit=FORTXC', [])),
+  uri_parse("zos:/myproj.linalg.fortran?submit=FORTXC", uri(zos, [], [], 80, 'myproj.linalg.fortran', 'submit=FORTXC', [])),
+  \+uri_parse("zos:myproj.linalg.fortran(svd)?submit=FORTXC", _),
+  \+uri_parse("zos:myproj.linalg.fortran?submit=FORTXC", _),
+  \+uri_parse("zos:/myproj.linalg.fortran()?submit=FORTXC", _),
+  \+uri_parse("zos:/myproj.linalg.fortran(?submit=FORTXC", _),
+  \+uri_parse("zos:/myproj.linalg.fortran)?submit=FORTXC", _),
+  \+uri_parse("zos:/", _), %%% PATH deve contenere almeno 1 carattere
+  \+uri_parse("zos:/myproj.linalg.fortran(a23456789))", _), %%% TOO MANY id8 chars (9)
+  \+uri_parse("zos:/a234567890a234567890a234567890a23456789012345", _), %%% TOO MANY id44 chars (45)
+  \+uri_parse("zos:/1", _), %%% id44 non inizia per ALPHA
+  \+uri_parse("zos:/a(1)", _), %%% id8 non inizia per ALPHA
+  \+uri_parse("zos:/a.", _), %%% id44 non può terminare con un punto
+  \+uri_parse("zos:", _).
+
+
+
+:- end_tests(uri).
