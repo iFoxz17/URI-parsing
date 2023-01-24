@@ -1,7 +1,7 @@
 Membri progetto:
 	
-	Volpato Mattia 866316
-	Colombo Marco  866431
+	Volpato Mattia
+	Colombo Marco
 
 
 La libreria è composta da un'interfaccia ("uri-parse.lisp") che contiene la definizione delle 
