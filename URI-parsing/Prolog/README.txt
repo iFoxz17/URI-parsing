@@ -1,8 +1,7 @@
 Membri progetto:
 	
-	Volpato Mattia 866316
-	Colombo Marco  866431
-
+	Volpato Mattia
+	Colombo Marco
 
 La libreria è composta da un'interfaccia ("uri-parse.pl") che contiene la definizione dei
 2 predicati richiesti ('uri_parse' e 'uri_display');
