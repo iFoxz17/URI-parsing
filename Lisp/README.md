@@ -17,16 +17,16 @@ Alcuni moduli non sono strettamente correlati al riconoscimento di un campo dell
 - ***"uri-struct.lisp"*** è un modulo di appoggio per l'interfaccia ***uri-parse***;
 - ***"definitions.lisp"*** contiene la definizione dei termini base della grammatica;
 - ***"optional.lisp"*** viene utilizzato per la gestione della parte opzionale della grammatica <code>URI1</code>
-(['/' [path] ['?' query] ['#' fragment']]);
+(*['/' [path] ['?' query] ['#' fragment']]*);
 - ***grammar1.lisp*** viene utilizzato per il riconoscimento di <code>URI1</code> con <code>authorithy</code> non opzionale
-(scheme ':' authorithy ['/' [path] ['?' query] ['#' fragment']]);
+(*scheme ':' authorithy ['/' [path] ['?' query] ['#' fragment']]*);
 - ***"grammar2.lisp"*** viene utilizzato per il riconoscimento di <code>URI1</code> senza <code>authorithy</code> 
-(scheme ':' ['/' [path] ['?' query] ['#' fragment']]).
+(*scheme ':' ['/' [path] ['?' query] ['#' fragment']]*).
 
 ## Note
 
 - Nella definizione dei termini base, non viene eseguito nessun controllo sul termine 'caratteri'
-(per esempio, fragment ::= <caratteri>+ riconosce qualsiasi carattere che viene inserito).
+(per esempio, *fragment ::= <caratteri>+* riconosce qualsiasi carattere che viene inserito).
 
 
 - Seguendo le indicazioni date, la stringa <code>"zos:"</code> non viene accettata in quanto lo schema zos richiede un path
