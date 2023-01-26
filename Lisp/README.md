@@ -34,5 +34,5 @@ obbligatorio; inoltre, se non viene specificata esplicitamente la porta, viene i
 anche se tale schema non comprende la porta nella sua definizione.
 
 ## Test
-Il file <code>.lisp</code> contiene una serie di test per verificare il corretto comportamento della libreria.
+Il file <code>Test.lisp</code> contiene una serie di test per verificare il corretto comportamento della libreria.
 
