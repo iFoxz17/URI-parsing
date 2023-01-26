@@ -138,7 +138,7 @@
 (test-error "zos://me@hercules.disco.unimib.it:3270/a234567890a234567890a234567890a23456789012345") ; TOO MANY id44 chars (45)
 (test-error "zos://me@hercules.disco.unimib.it:3270/1") ; id44 non inizia per ALPHA
 (test-error "zos://me@hercules.disco.unimib.it:3270/a(1)") ; id8 non inizia per ALPHA
-(test-error "zos://me@hercules.disco.unimib.it:3270/a.") ; id44 non pu�� terminare con un punto
+(test-error "zos://me@hercules.disco.unimib.it:3270/a.") ; id44 non puï¿ï¿ terminare con un punto
 (test-error "zos://me@hercules.disco.unimib.it:3270")
 
 ;; sZos
@@ -153,7 +153,7 @@
 (test-error "zos:/a234567890a234567890a234567890a23456789012345") ; TOO MANY id44 chars (45)
 (test-error "zos:/1") ; id44 non inizia per ALPHA
 (test-error "zos:/a(1)") ; id8 non inizia per ALPHA
-(test-error "zos:/a.") ; id44 non pu�� terminare con un punto
+(test-error "zos:/a.") ; id44 non puï¿ï¿ terminare con un punto
 (test-error "zos:")
 (test-error "zos:myproj.linalg.fortran(svd)?submit=FORTXC")
 (test-error "zos:myproj.linalg.fortran?submit=FORTXC")
