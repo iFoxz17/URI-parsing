@@ -26,7 +26,7 @@ Alcuni moduli non sono strettamente correlati al riconoscimento di un campo dell
 ## Note
 
 - Nella definizione dei termini base, non viene eseguito nessun controllo sul termine 'caratteri'
-(per esempio, *fragment ::= <caratteri>+* riconosce qualsiasi carattere che viene inserito).
+(per esempio, *fragment ::= [caratteri]+* riconosce qualsiasi carattere che viene inserito).
 
 
 - Seguendo le indicazioni date, la stringa <code>"zos:"</code> non viene accettata in quanto lo schema zos richiede un path
