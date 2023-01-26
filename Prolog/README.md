@@ -26,7 +26,7 @@ per rendere invertibile il predicato ***'uri-parse'*** (a scopo di testing).
 ## Note
 
 - Nella definizione dei termini base, non viene eseguito nessun controllo sul termine 'caratteri'
-(per esempio, *fragment ::= caratteri+* riconosce qualsiasi carattere che viene inserito).
+(per esempio, *fragment ::= [caratteri]+* riconosce qualsiasi carattere che viene inserito).
 
 - Seguendo le indicazioni date, la stringa <code>"zos:"</code> non viene accettata in quanto lo schema zos richiede un path
 obbligatorio; inoltre, se non viene specificata esplicitamente la porta, viene inserita di default 80 in ogni schema,
