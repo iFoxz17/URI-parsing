@@ -1,0 +1,48 @@
+(require "DEFINITIONS" "definitions.lisp")            
+(require "HOST" "host.lisp")
+
+(provide "AUTHORITHY")
+
+(defun authorithy-recognize (l &optional (zos-flag NIL))
+  (cond ((stringp l) 
+         (authorithy-recognize (coerce l 'list) zos-flag))
+        ((listp l) 
+         (authorithy-accept 'q0 l zos-flag))
+        )
+  )
+
+(defun authorithy-accept (q l zos-flag &optional (acc NIL))
+  (cond ((null q) NIL)
+        ((null l) NIL)
+        ((eql q 'q2) 
+         (let ((host (host-recognize l T zos-flag))) 
+           (if (= (length host) 5) (append (list NIL) host)
+             (authorithy-accept (authorithy-delta q (car l))
+                                (cdr l)
+                                zos-flag
+                                (append acc 
+                                        (cons (car l) NIL)))
+             )))
+        ((char= (car l) #\@) 
+         (if (eql q 'q3) (append (list acc)
+                                 (host-recognize (cdr l) 
+                                                 T zos-flag))
+           NIL))
+        (T (authorithy-accept (authorithy-delta q (car l))
+                              (cdr l)
+                              zos-flag
+                              (if (or (eql q 'q0) 
+                                      (eql q 'q1))
+                                  acc
+                                (append acc (cons (car l) NIL)))
+                              ))
+        )
+  )
+
+(defun authorithy-delta (q x)
+  (cond ((and (eql q 'q0) (char= x #\/)) 'q1)
+        ((and (eql q 'q1) (char= x #\/)) 'q2)
+        ((and (eql q 'q2) (identifier x)) 'q3)
+        ((and (eql q 'q3) (identifier x)) 'q3)
+        )
+  )
