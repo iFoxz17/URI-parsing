@@ -15,7 +15,7 @@ Alcuni moduli non sono strettamente correlati al riconoscimento di un campo dell
 - ***"uri-util.pl"*** è un modulo di appoggio per l'interfaccia ***"uri-parse.pl"***;
 - ***"definitions.pl"*** contiene la definizione dei termini base della grammatica;
 - ***"optional.pl"*** viene utilizzato per la gestione della parte opzionale della grammatica <code>URI1</code>
-(['/' [path] ['?' query] ['#' fragment']]);
+(*['/' [path] ['?' query] ['#' fragment']]*);
 - ***"grammar1.pl"*** viene utilizzato per il riconoscimento di <code>URI1</code> con <code>authorithy</code> non opzionale
 (*scheme ':' authorithy ['/' [path] ['?' query] ['#' fragment']]*)
 - ***"grammar2.pl"*** viene utilizzato per il riconoscimento di <code>URI1</code> senza <code>authorithy</code> 
