@@ -14,13 +14,13 @@ modularità, che favorisce eventuali modifiche alle grammatiche definite.
 
 Alcuni moduli non sono strettamente correlati al riconoscimento di un campo della struttura uri:
 
-- "uri-struct.lisp" è un modulo di appoggio per l'interfaccia uri-parse;
-- "definitions.lisp" contiene la definizione dei termini base della grammatica;
-- "optional.lisp" viene utilizzato per la gestione della parte opzionale della grammatica URI1
+- ***"uri-struct.lisp"*** è un modulo di appoggio per l'interfaccia ***uri-parse***;
+- ***"definitions.lisp"*** contiene la definizione dei termini base della grammatica;
+- ***"optional.lisp"*** viene utilizzato per la gestione della parte opzionale della grammatica <code>URI1</code>
 (['/' [path] ['?' query] ['#' fragment']]);
-- grammar1.lisp viene utilizzato per il riconoscimento di URI1 con authorithy non opzionale
+- ***grammar1.lisp*** viene utilizzato per il riconoscimento di <code>URI1</code> con <code>authorithy</code> non opzionale
 (scheme ':' authorithy ['/' [path] ['?' query] ['#' fragment']]);
-- "grammar2.lisp" viene utilizzato per il riconoscimento di URI1 senza authorithy 
+- ***"grammar2.lisp"*** viene utilizzato per il riconoscimento di <code>URI1</code> senza <code>authorithy</code> 
 (scheme ':' ['/' [path] ['?' query] ['#' fragment']]).
 
 ## Note
